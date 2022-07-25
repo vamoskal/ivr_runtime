@@ -1,0 +1,10 @@
+# dotnet
+bin/
+obj/
+.vs/
+.vscode/
+# f# tooling
+.fake
+
+# project
+external/

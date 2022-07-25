@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Wasi.Sdk" Version="0.1.1" />
+  </ItemGroup>
+  
+	<ItemGroup>
+		<WasiNativeFileReference Include="$(MSBuildThisFileDirectory)\native\*.c" />
+		<WasiAfterRuntimeLoaded Include="bundled_files_attach_internal_calls" />
+	</ItemGroup>
+  
+  
+  <Target Name="BuildWat" AfterTargets="Build" DependsOnTargets="CopyWasmToOutput">
+      <PropertyGroup>
+        <Wasm2WatPath>$(MSBuildProjectDirectory)\..\..\external\bin\wasm2wat.exe</Wasm2WatPath>
+        <WasmlOutFile>$(MSBuildProjectDirectory)\$(OutDir)$(MSBuildProjectName).wasm</WasmlOutFile>
+        <WatOutFile>$(MSBuildProjectDirectory)\$(OutDir)$(MSBuildProjectName).wat</WatOutFile>
+      </PropertyGroup>
+      <Message Importance="high" Text="Generating: $(WasmlOutFile) --> $(WatOutFile)"/>
+      <Error Condition="!Exists($(Wasm2WatPath))" Text="Wab tools do not exist" />
+      <Exec Command="$(Wasm2WatPath) $(WasmlOutFile) -o $(WatOutFile)"/>
+      <Copy SourceFiles="$(WasmlOutFile)" DestinationFolder="$(MSBuildProjectDirectory)\..\Service\WebRoot\" SkipUnchangedFiles="true" />
+  </Target>
+</Project>

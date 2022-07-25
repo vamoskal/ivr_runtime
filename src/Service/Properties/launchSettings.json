@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "Service": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "WASMTIME_BACKTRACE_DETAILS": "1"
+      },
+      "applicationUrl": "https://localhost:51003;http://localhost:51004"
+    }
+  }
+}
