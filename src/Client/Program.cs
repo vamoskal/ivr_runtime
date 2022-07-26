@@ -1,2 +1,3 @@
 ﻿// See https://aka.ms/new-console-template for more information
-Client.StaticMethods.WriteHelloWorld();
+
+Client.StaticMethods.PromptAndFill("Hey you");

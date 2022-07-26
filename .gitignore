@@ -8,3 +8,4 @@ obj/
 
 # project
 external/
+/src/Service/WebRoot/*.wasm
