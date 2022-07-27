@@ -23,18 +23,18 @@ type Message =
 // ---------------------------------
 // Web app
 // ---------------------------------
-let executeWasmi functionName =
+let executeWasmi =
     use runtime =new WasiService.Runtime("")
     runtime.Init()
     runtime.Execute(".\WebRoot\Client.wasm")
-    text ("Put response here" + functionName)
+    text (runtime.Logs)
 
 let webApp =
     choose [
         GET >=>
             choose [
-                route "/hello" >=> text "Hello World"
-                routef "/wasmi/%s" executeWasmi 
+                route "/" >=> text "Hello World"
+                route "/wasmi" >=> executeWasmi
             ]
         setStatusCode 404 >=> text "Not Found" ]
 
