@@ -27,6 +27,6 @@
       <Message Importance="high" Text="Generating: $(WasmlOutFile) --> $(WatOutFile)"/>
       <Error Condition="!Exists($(Wasm2WatPath))" Text="Wab tools do not exist" />
       <Exec Command="$(Wasm2WatPath) $(WasmlOutFile) -o $(WatOutFile)"/>
-      <Copy SourceFiles="$(WasmlOutFile)" DestinationFolder="$(MSBuildProjectDirectory)\..\Service\WebRoot\" SkipUnchangedFiles="true" />
+      <Copy SourceFiles="$(WasmlOutFile)" DestinationFolder="$(MSBuildProjectDirectory)\..\Service\bin\Debug\net6.0\WebRoot\" SkipUnchangedFiles="true" />
   </Target>
 </Project>

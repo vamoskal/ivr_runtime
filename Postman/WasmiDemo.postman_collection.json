@@ -1,0 +1,78 @@
+{
+	"info": {
+		"_postman_id": "a513ea8f-978f-438b-a67c-bd4514cc7c5e",
+		"name": "WasmiDemo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11541037"
+	},
+	"item": [
+		{
+			"name": "provision",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "#include <stdio.h>\r\n\r\nlong int result;\r\nvolatile long int x = 42L;\r\n\r\n__attribute__((import_name(\"put_value\")))\r\nint put_value();\r\n\r\n__attribute__((export_name(\"get_result\")))\r\nlong int get_result(){\r\n    return result;\r\n}\r\n\r\n\r\nint main(void) {\r\n    int n = put_value();\r\n    result = n * x;\r\n    printf(\"the answer is %ld\\n\", result);\r\n    return 0;\r\n}"
+				},
+				"url": {
+					"raw": "https://localhost:51003/wasmi/23:provision",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "51003",
+					"path": [
+						"wasmi",
+						"23:provision"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "execute",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:51003/wasmi/23:execute",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "51003",
+					"path": [
+						"wasmi",
+						"23:execute"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Order pizza example",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:51003/wasmi/pizza",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "51003",
+					"path": [
+						"wasmi",
+						"pizza"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

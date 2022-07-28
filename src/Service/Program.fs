@@ -9,32 +9,50 @@ open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
-
-// ---------------------------------
-// Models
-// ---------------------------------
-
-type Message =
-    {
-        Text : string
-    }
-
+open Microsoft.AspNetCore.Http
+open System.Net.Http 
 
 // ---------------------------------
 // Web app
 // ---------------------------------
-let executeWasmi =
-    use runtime =new WasiService.Runtime("")
+let executePizzaExample  =
+    fun (next : HttpFunc) (ctx : HttpContext) ->
+        task{
+            use runtime =new WasiService.Runtime("")
+            runtime.Init()
+            runtime.ExecutePizzaExample(Generator.currentDir + "\WebRoot\Client.wasm")
+            return! setBodyFromString (runtime.Logs) next ctx
+        }
+
+let execute id=
+    use runtime = new WasiService.Runtime("")
     runtime.Init()
-    runtime.Execute(".\WebRoot\Client.wasm")
-    text (runtime.Logs)
+    let success,exec = Generator.tryFindById id
+    match success with
+    | true ->
+        runtime.ExecuteGetResultInt64(exec)
+        text (runtime.Logs)
+    | false -> setStatusCode 404 >=> text "Not Found"
+    
+let compile id=
+    fun (next : HttpFunc) (ctx : HttpContext) ->
+        task {
+            let! codeSnippet = ctx.ReadBodyFromRequestAsync()
+            let! wasmPath = Generator.generateWasm id codeSnippet
+            return! Successful.ACCEPTED "" next ctx
+        }
 
 let webApp =
     choose [
         GET >=>
             choose [
                 route "/" >=> text "Hello World"
-                route "/wasmi" >=> executeWasmi
+                route "/wasmi/pizza" >=> executePizzaExample
+            ]
+        POST >=>
+            choose[
+                routef "/wasmi/%i:execute" execute
+                routef "/wasmi/%i:provision" compile
             ]
         setStatusCode 404 >=> text "Not Found" ]
 
