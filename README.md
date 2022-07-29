@@ -24,3 +24,10 @@ cd <root>\src\Server
 dotnet run
 ```
 Use Postman collections provided
+
+### AssemblyScript example
+https://www.assemblyscript.org/getting-started.html#setting-up-a-new-project 
+In case of error below, update node.js
+```
+"SyntaxError: missing ) after argument list"
+```

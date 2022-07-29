@@ -5,8 +5,9 @@ obj/
 .vscode/
 # f# tooling
 .fake
-
+node_modules/
 # project
 external/
 /src/Service/WebRoot/*.wasm
 *~
+assemblyScript/build/

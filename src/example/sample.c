@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 long int result;
-volatile long int x = 42L;
+volatile int x = 42;
 
 __attribute__((import_name("put_value")))
 int put_value();

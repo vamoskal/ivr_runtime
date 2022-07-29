@@ -12,6 +12,8 @@ open Giraffe
 open Microsoft.AspNetCore.Http
 open System.Net.Http 
 
+
+
 // ---------------------------------
 // Web app
 // ---------------------------------
@@ -35,11 +37,21 @@ let execute id=
     | false -> setStatusCode 404 >=> text "Not Found"
     
 let compile id=
+    let getLangType (request:HttpRequest)=
+        match request.Headers.TryGetValue("Content-Type") with
+        | false, _ -> failwith "Content-Type header was not found"
+        | true, typeHeader -> match typeHeader.[0] with
+                              | "application/clang" -> Generator.CLang
+                              | "application/as" -> Generator.AssemblyScript 
+                              | _ -> failwithf "Unsupported content type '%s'" (typeHeader.ToString())
+
     fun (next : HttpFunc) (ctx : HttpContext) ->
         task {
             let! codeSnippet = ctx.ReadBodyFromRequestAsync()
-            let! wasmPath = Generator.generateWasm id codeSnippet
-            return! Successful.ACCEPTED "" next ctx
+            let scriptLang = getLangType ctx.Request
+            
+            let! _ = Generator.generateWasm id codeSnippet scriptLang
+            return! Successful.ACCEPTED null next ctx
         }
 
 let webApp =
